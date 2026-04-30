@@ -1,0 +1,66 @@
+1) Create node js project with in vs studio code editor
+- server.js
+- package.json
+- Dockerfile
+
+2) Create WS EC2 instance on cloud 
+
+3) login into the ec2 instance --> connect
+
+4) send your project onto the AWS EC2 with the following command
+Run --> from your VS studio project path
+eg:
+D:\Demos_MCP\real-mcp-server> scp -i C:\Users\Lenovo\Downloads\mcp-key.pem server.js Dockerfile package.json ec2-user@98.91.213.141:/home/ec2-user/real-mcp-server
+
+5) go to aws ec2 --> login into ec2 Linux terminal --> cross veryify whether real-mcp-server folder got created or not and you will see all the server.js Dockerfile package.json files coming there
+
+6) come to your windows CMD and do SSH into the AWS EC2 machine
+Run:
+D:\Demos_MCP\real-mcp-server>ssh -i C:\Users\Lenovo\Downloads\mcp-key.pem ec2-user@98.91.213.141
+(once you logged in "Bird" icon will be displayed
+
+7) inside the ec2-user path build the Dockerfile --> to create --> docker image with name "real-mcp-server"
+Run:
+[ec2-user@ip-172-31-43-110 real-mcp-server]$ docker build -t real-mcp-server .
+
+8) verify docker image came or not 
+run:
+[ec2-user@ip-172-31-43-110 real-mcp-server]$ docker images
+REPOSITORY        TAG       IMAGE ID       CREATED          SIZE
+real-mcp-server   latest    7ff1e466c0d3   28 seconds ago   173MB
+
+9) the docker image created above in step(8) --> run inside the docker container
+run:
+[ec2-user@ip-172-31-43-110 real-mcp-server]$ docker run -it --name real-mcp-container real-mcp-server
+
+> real-mcp-server@1.0.0 start
+> node server.js
+
+=====================================================================
+10) test using the cursor tool
+
+11) go to mcp.json file and make the following changes
+//add code below
+{
+  "mcpServers": {
+    "aws-mcp-server": {
+      "command": "ssh",
+      "args": [
+        "-i",
+        "C:\\Users\\Lenovo\\Downloads\\mcp-key.pem",
+        "ec2-user@98.91.213.141",
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "real-mcp-server"
+      ]
+    }
+  }
+}
+
+save the file
+
+12) tools should be enabled and name of tolls will be displayed
+
+13) run the agent --> put the prompt 
